@@ -26,21 +26,21 @@ public class SceneHelperEditor : OdinEditorWindow
             var assetPath = AssetDatabase.GetAssetPath(asset);
 
             var menuItemMatch = "//menu item placeholder";
-            var scenePathMatch = "scene name placeholder";
 
             var regexMenuItem = menuItemMatch + i;
-            var regexScenePath = scenePathMatch + i;
+            var regexScenePath = $"\"scene name placeholder{i}\";";
             var fileContent = File.ReadAllText("Assets/Editor/ShortMenu.cs");
 
             if(Regex.Match(fileContent, regexMenuItem).Length == 0){
                 regexMenuItem = $".+?//{i}";
             }
+            Debug.Log(Regex.Match(fileContent, regexScenePath).Length);
             if(Regex.Match(fileContent, regexScenePath).Length == 0){
-                regexScenePath = $"{assetPath}";
+                regexScenePath = $".+?//s{i}";
             }
 
             string modified = Regex.Replace(fileContent, regexMenuItem, $"[MenuItem(\"Open Scenes/{asset.name}\")]//{i}");
-            var final = Regex.Replace(modified, regexScenePath, $"{assetPath}");
+            var final = Regex.Replace(modified, regexScenePath, $"\"{assetPath}\";//s{i}");
 
             File.WriteAllText("Assets/Editor/ShortMenu.cs", final);
         }
