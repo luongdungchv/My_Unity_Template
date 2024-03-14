@@ -42,8 +42,6 @@ public class SceneHelperEditor : OdinEditorWindow
             string modified = Regex.Replace(fileContent, regexMenuItem, $"[MenuItem(\"Open Scenes/{asset.name}\")]//{i}");
             var final = Regex.Replace(modified, regexScenePath, $"{assetPath}");
 
-            Debug.Log(final);
-
             File.WriteAllText("Assets/Editor/ShortMenu.cs", final);
         }
     }
