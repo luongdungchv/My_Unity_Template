@@ -8,7 +8,8 @@ public class ShortMenu : Editor
 {
 //menu item placeholder0
     public static void Option1(){
-        string scenePath = "scene name placeholder0";
+        string scenePath = 
+        "scene name placeholder0";
         EditorSceneManager.SaveOpenScenes();
         EditorSceneManager.OpenScene(scenePath);
     }
