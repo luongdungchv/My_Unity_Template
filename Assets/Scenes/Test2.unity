@@ -329,7 +329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Quad: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
-  GrassMaterial: {fileID: 2100000, guid: a91d036a22501b64c9deac18ad1bda72, type: 2}
+  GrassMaterial: {fileID: 2100000, guid: 6810dd30162cfa045b3e056d08e5413b, type: 2}
   GrassTexture: {fileID: 2800000, guid: 8bc445bb79654bf496c92d0407840a92, type: 3}
   VolumeCenter: {x: 0, y: 0, z: 0}
   VolumeSize: {x: 2000, y: 2000, z: 2000}
