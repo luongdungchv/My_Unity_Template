@@ -325,16 +325,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 974506260}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af1c16dc3c9abc74f94516fcf8d1c085, type: 3}
+  m_Script: {fileID: 11500000, guid: 73811e3679ce11d4d9fe8d97dc28c3c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Quad: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
-  GrassMaterial: {fileID: 2100000, guid: 6810dd30162cfa045b3e056d08e5413b, type: 2}
-  GrassTexture: {fileID: 2800000, guid: 8bc445bb79654bf496c92d0407840a92, type: 3}
-  VolumeCenter: {x: 0, y: 0, z: 0}
-  VolumeSize: {x: 2000, y: 2000, z: 2000}
-  R: 100
-  CutOff: 0.5
+  stateData: {fileID: 11400000, guid: 527f3edd8d6d75447b2e6c1c258ef39c, type: 2}
 --- !u!4 &974506262
 Transform:
   m_ObjectHideFlags: 0
