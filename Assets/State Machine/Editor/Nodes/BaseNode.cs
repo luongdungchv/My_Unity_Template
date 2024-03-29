@@ -15,6 +15,8 @@ public class BaseNode : Node
     protected StateMachineWindow window;
     protected Vector2 defaultSize = new Vector2(200, 250);
 
+    public ObjectField scriptAssetField;
+
     public BaseNode()
     {
         //styleSheets.Add(Resources.Load<StyleSheet>("NodeStyleSheet"));
@@ -22,13 +24,24 @@ public class BaseNode : Node
         inputPortList = new List<Port>();
     }
     public BaseNode(Vector2 pos, StateMachineWindow window, StateMachineGraphView graph){
+
+        outputPortList = new List<Port>();
+        inputPortList = new List<Port>();
         this.window = window;
         this.graph = graph;
+
+        node_Guid = System.Guid.NewGuid().ToString();
+        title = "Content";
+        SetPosition(new Rect(pos, defaultSize));
+
+        this.InitializeElements();
+
     }
     public void AddOutputPort(string name, Port.Capacity cap = Port.Capacity.Single)
     {
         Port output = GetPortInstance(Direction.Output, cap);
         EdgeConnector<Edge> customConnector = new EdgeConnector<Edge>(new EdgeConnectorListener(window, graph));
+        Debug.Log(output);
         output.AddManipulator(customConnector);
         output.portName = name;
         outputContainer.Add(output);
@@ -45,11 +58,12 @@ public class BaseNode : Node
     public Port GetPortInstance(Direction dir, Port.Capacity cap = Port.Capacity.Single)
     {
         return InstantiatePort(Orientation.Horizontal, dir, cap, typeof(float));
-        //return new CustomPort(Orientation.Horizontal, dir, cap, typeof(float));
 
     }
-    // public virtual void LoadNodeData(BaseNodeData data)
-    // {
-
-    // }
+    private void InitializeElements(){
+        this.scriptAssetField = new ObjectField(){
+            objectType = typeof(MonoScript),
+            allowSceneObjects = false
+        };
+    }
 }

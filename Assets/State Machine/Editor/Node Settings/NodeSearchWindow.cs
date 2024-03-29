@@ -24,7 +24,6 @@ public class NodeSearchWindow : ScriptableObject, ISearchWindowProvider
         List<SearchTreeEntry> entries = new List<SearchTreeEntry>
         {
             new SearchTreeGroupEntry(new GUIContent("Content Node"), 0),
-            //new SearchTreeGroupEntry(new GUIContent("Content"), 1),
             AddNodeSearch("State", new BaseNode()),
         };
 
@@ -50,7 +49,7 @@ public class NodeSearchWindow : ScriptableObject, ISearchWindowProvider
     {
        
         if(entry.userData.GetType() == typeof(BaseNode)){
-            var node = graph.CreateContentNode(pos, false);
+            var node = graph.CreateNode(pos, false);
             graph.AddElement(node);
             ConnectNode(node.inputPortList[0]);
             return true;
