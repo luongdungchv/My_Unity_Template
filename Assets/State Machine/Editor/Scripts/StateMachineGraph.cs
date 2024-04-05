@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Graphs;
 using UnityEditor;
+using UnityEngine.Profiling;
+using System.Reflection;
 
 public class StateMachineGraph : GraphGUI
 {
@@ -22,17 +24,44 @@ public class StateMachineGraph : GraphGUI
             return this.m_EdgeGUI;
         }
     }
-    public void OnUpdate(){
-       
+    public void OnUpdate()
+    {
+
     }
+
+    public new void BeginGraphGUI(EditorWindow host, Rect position)
+    {
+        this.m_GraphClientArea = position;
+        this.m_Host = host;
+        bool flag = Event.current.type == EventType.Repaint;
+
+        var graphExtents = (Rect)typeof(Graph).GetField("graphExtents", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(this.graph);
+        //Debug.Log(typeof(Graph).GetField("graphExtents", BindingFlags.NonPublic | BindingFlags.Instance));
+        if (flag)
+        {
+            Styles.graphBackground.Draw(position, false, false, false, false);
+        }
+        //this.m_ScrollPosition = GUI.BeginScrollView(position, this.m_ScrollPosition, graphExtents, GUIStyle.none, GUIStyle.none);
+        bool flag2 = Event.current.type == EventType.Repaint;
+        if (flag2)
+        {
+            Vector2 vector = -this.m_ScrollPosition - graphExtents.min;
+            Rect gridRect = new Rect(-vector.x, -vector.y, position.width, position.width);
+
+            var drawGridInfo = typeof(GraphGUI).GetMethod("DrawGrid", BindingFlags.NonPublic | BindingFlags.Instance);
+            drawGridInfo.Invoke(this, new object[]{gridRect, 1f});
+        }
+    }
+
     public override void NodeGUI(Node n)
     {
         GUILayoutUtility.GetRect(200, 40);
         base.SelectNode(n);
         if (TransitionMaker.IsMakingTransition && Event.current.type == EventType.MouseDown && Event.current.button == 0 && Event.current.clickCount == 1)
         {
-            foreach(var x in (this.graph as CustomGraph).FSMEdgeList){
-                if(x.StartNode == transitionMaker.StartNode && x.EndNode == n) return;
+            foreach (var x in (this.graph as CustomGraph).FSMEdgeList)
+            {
+                if (x.StartNode == transitionMaker.StartNode && x.EndNode == n) return;
             }
             (this.graph as CustomGraph).RemoveLastEdge();
             (this.graph as CustomGraph).Connect(transitionMaker.StartNode, n);
@@ -54,7 +83,8 @@ public class StateMachineGraph : GraphGUI
             node.position = GUILayout.Window(
                 node.GetInstanceID(),
                 node.position,
-                (i) => {
+                (i) =>
+                {
                     this.NodeGUI(n2);
                     clickOnNode = false;
                 },
@@ -67,7 +97,7 @@ public class StateMachineGraph : GraphGUI
         this.DragSelection();
         this.HandleMenuEvents();
 
-        if(!clickOnNode) this.HandleMakeTransition();
+        if (!clickOnNode) this.HandleMakeTransition();
     }
 
     private void DisplayContextMenu()
@@ -103,7 +133,7 @@ public class StateMachineGraph : GraphGUI
             EditorUtility.DisplayCustomMenu(position, options, -1, new EditorUtility.SelectMenuItemFunction(this.ContextMenuClick), userData);
         }
 
-        
+
     }
 
     private void ContextMenuClick(object userData, string[] options, int selected)
@@ -122,7 +152,8 @@ public class StateMachineGraph : GraphGUI
                     this.m_Host.SendEvent(EditorGUIUtility.CommandEvent(eventText));
                 }
 
-                else if(eventText == "Make Transition"){
+                else if (eventText == "Make Transition")
+                {
                     var selectedNode = this.selection[0];
                     this.transitionMaker.SetStartNode(selectedNode);
                     this.transitionMaker.StartMakingTransition();
@@ -143,7 +174,8 @@ public class StateMachineGraph : GraphGUI
 
     private void HandleMakeTransition()
     {
-        if(Event.current.type == EventType.MouseDown && Event.current.button == 0 && Event.current.clickCount == 1 && TransitionMaker.IsMakingTransition){
+        if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && Event.current.clickCount == 1 && TransitionMaker.IsMakingTransition)
+        {
             (this.graph as CustomGraph).RemoveLastEdge();
             this.transitionMaker.StopMakingTransition();
         }

@@ -11,7 +11,6 @@ public class CustomEdgeGUI : EdgeGUI
     public void RenderEdges()
     {
         var edgeList = ((this.host as StateMachineGraph).graph as CustomGraph).FSMEdgeList;
-        Debug.Log(Event.current.type);
         foreach (var edge in edgeList)
         {
             var start = edge.StartNode.position.center;
