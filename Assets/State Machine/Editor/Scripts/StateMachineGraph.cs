@@ -49,7 +49,7 @@ public class StateMachineGraph : GraphGUI
             Rect gridRect = new Rect(-vector.x, -vector.y, position.width, position.width);
 
             var drawGridInfo = typeof(GraphGUI).GetMethod("DrawGrid", BindingFlags.NonPublic | BindingFlags.Instance);
-            drawGridInfo.Invoke(this, new object[]{gridRect, 1f});
+            //drawGridInfo.Invoke(this, new object[]{gridRect, 1f});
         }
     }
 

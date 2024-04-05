@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ZoomManipulator : MonoBehaviour
+public class Manipulator : MonoBehaviour
 {
     private Rect initialRect;
     private Rect currentRect;
@@ -13,7 +13,7 @@ public class ZoomManipulator : MonoBehaviour
     public Vector2 position => new Vector2(currentRect.x, currentRect.y);
     public float Scale => this.zoomScale;
 
-    public void SetUpZoom(Rect initialRect){
+    public void SetUp(Rect initialRect){
         this.initialRect = initialRect;
         this.currentRect = initialRect;
         this.zoomScale = 1;
@@ -28,8 +28,6 @@ public class ZoomManipulator : MonoBehaviour
         Matrix4x4 translation = Matrix4x4.TRS(currentRect.TopLeft(), Quaternion.identity, Vector3.one);
         Matrix4x4 scale = Matrix4x4.Scale(new Vector3(zoomScale, zoomScale, 1.0f));
         GUI.matrix = translation * scale * translation.inverse * GUI.matrix;
-
-        Debug.Log(this.zoomScale);
         
         return currentRect;
     }
@@ -51,5 +49,8 @@ public class ZoomManipulator : MonoBehaviour
         var scaledWidth = currentRect.width * zoomScale;
         var scaledHeight = currentRect.height * zoomScale;
         currentRect.position = pivot - new Vector2(scaledWidth, scaledHeight) / 2;
+    }
+    public void Translate(Vector2 direction){
+        this.SetRectPosition(this.position + direction);
     }
 }

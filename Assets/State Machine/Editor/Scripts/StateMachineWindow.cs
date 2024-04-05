@@ -22,7 +22,7 @@ public class StateMachineWindow : EditorWindow
 
     private IMGUIContainer guiContainer;
     private Rect windowArea;
-    private ZoomManipulator zoomManipulator;
+    private Manipulator manipulator;
     private float zoomLevel = 1;
 
     [OnOpenAsset(0)]
@@ -33,11 +33,12 @@ public class StateMachineWindow : EditorWindow
         {
             var window = GetWindow<StateMachineWindow>("Test");
             window.wantsMouseMove = true;
+            window.wantsMouseEnterLeaveWindow = true;
             window.Show();
             Debug.Log(window.position);
             window.SetUpGraph();
         }
-        
+
 
         return false;
     }
@@ -75,26 +76,32 @@ public class StateMachineWindow : EditorWindow
 
         //base.rootVisualElement.Add(guiContainer);
         this.windowArea = this.position;
-        this.zoomManipulator = new ZoomManipulator();
-        this.zoomManipulator.SetUpZoom(windowArea);
+        this.manipulator = new Manipulator();
+        this.manipulator.SetUp(windowArea);
         Debug.Log(this.windowArea);
         this.zoomLevel = 1;
     }
 
-    private void OnGUI() {
-        if(graphGUI != null){
+    private void OnGUI()
+    {
+        if (graphGUI != null)
+        {
             //Debug.Log(this.position);
             graphGUI.BeginGraphGUI(this, new Rect(0, 0, this.position.width, this.position.height));
             GUI.EndScrollView();
-            zoomManipulator.BeginGUI();
+            manipulator.BeginGUI();
+            this.HandlePan();
             graphGUI.OnGraphGUI();
             graphGUI.EndGraphGUI();
-            zoomManipulator.EndGUI();
+            manipulator.EndGUI();
+            
             this.HandleScroll();
         }
     }
-    private void HandleScroll(){
-        if(Event.current.type == EventType.ScrollWheel){
+    private void HandleScroll()
+    {
+        if (Event.current.type == EventType.ScrollWheel)
+        {
             var zoomAmount = Event.current.delta.y / Math.Abs(Event.current.delta.y);
             var lastZoomLevel = zoomLevel;
             this.zoomLevel -= zoomAmount / 8;
@@ -102,12 +109,24 @@ public class StateMachineWindow : EditorWindow
 
             var ratio = zoomLevel / lastZoomLevel;
 
-            zoomManipulator.SetZoomScale(zoomLevel);
-            var dir = zoomManipulator.position - Event.current.mousePosition;
+            manipulator.SetZoomScale(zoomLevel);
+            var dir = manipulator.position - Event.current.mousePosition;
             dir *= ratio;
-            zoomManipulator.SetRectPosition(Event.current.mousePosition + dir);
+            manipulator.SetRectPosition(Event.current.mousePosition + dir);
 
             Event.current.Use();
+        }
+    }
+    private void HandlePan()
+    {
+        
+        if (Event.current.type == EventType.MouseDrag && Event.current.button == 2)
+        {
+            Debug.Log("Drag");
+            var delta = Event.current.delta;
+            this.manipulator.Translate(delta);
+            Event.current.Use();
+
         }
     }
     // private void Update() {
