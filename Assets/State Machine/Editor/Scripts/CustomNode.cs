@@ -6,5 +6,10 @@ using UnityEditor;
 
 public class CustomNode : Node
 {
-    [SerializeField] private MonoScript scriptAsset;
+    [SerializeField] private List<MonoScript> scriptAssetList;
+    [SerializeField] private string nodeTitle;
+
+    public List<MonoScript> ScriptAssets => this.scriptAssetList; 
+
+    public override string title { get => nodeTitle; set => nodeTitle = value; }
 }

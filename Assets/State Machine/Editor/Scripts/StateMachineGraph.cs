@@ -74,8 +74,8 @@ public class StateMachineGraph : GraphGUI
     {
         this.m_Host.BeginWindows();
         bool clickOnNode = false;
-        this.DisplayContextMenu();
-        foreach (CustomNode node in this.m_Graph.nodes)
+        //this.DisplayContextMenu();
+        foreach (var node in this.m_Graph.nodes)
         {
             Node n2 = node;
             bool on = this.selection.Contains(node);
@@ -100,7 +100,7 @@ public class StateMachineGraph : GraphGUI
         if (!clickOnNode) this.HandleMakeTransition();
     }
 
-    private void DisplayContextMenu()
+    public void DisplayContextMenu()
     {
         bool flag = Event.current.type != EventType.MouseDown || Event.current.button != 1 || Event.current.clickCount != 1;
         if (!flag)
@@ -121,6 +121,7 @@ public class StateMachineGraph : GraphGUI
             }
             else
             {
+                list.Add(EditorGUIUtility.TrTextContent("Create Node", null));
                 list.Add((this.edgeGUI.edgeSelection.Count == 0) ? EditorGUIUtility.TrTextContent("Paste", null) : EditorGUIUtility.TrTextContent("Delete", null, ""));
             }
             GUIContent[] options = list.ToArray();
@@ -163,6 +164,12 @@ public class StateMachineGraph : GraphGUI
                     tempEdge.SetStartNode(selectedNode);
                     (this.graph as CustomGraph).AddEdge(tempEdge);
                 }
+                else if (eventText == "Create Node"){
+                    var mousePos = (this.m_Host as StateMachineWindow).WindowToGroupPosition(contextMenuData.mousePosition);
+                    Debug.Log(mousePos);
+                    //mousePos = Vector2.one * 3000;
+                    (this.m_Host as StateMachineWindow).AddNewNode(mousePos.x, mousePos.y); 
+                }
 
                 else
                 {
@@ -174,10 +181,12 @@ public class StateMachineGraph : GraphGUI
 
     private void HandleMakeTransition()
     {
-        if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && Event.current.clickCount == 1 && TransitionMaker.IsMakingTransition)
+        if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && Event.current.clickCount == 1)
         {
-            (this.graph as CustomGraph).RemoveLastEdge();
+            if(TransitionMaker.IsMakingTransition) (this.graph as CustomGraph).RemoveLastEdge();
             this.transitionMaker.StopMakingTransition();
+            this.ClearSelection();
+            this.UpdateUnitySelection();
         }
     }
 

@@ -9,6 +9,12 @@ public class StateMachineDataSO : ScriptableObject
     public List<StateHolder> stateList;
     public List<StateTransition> stateTransitionList;
     public int entryStateIndex;
+
+    public void ResetData(){
+        stateList.Clear();
+        stateTransitionList.Clear();
+        entryStateIndex = 0;
+    }
 }
 [System.Serializable]
 public class StateHolder
@@ -18,6 +24,7 @@ public class StateHolder
     public List<Type> behaviourTypeList;
 #if UNITY_EDITOR
     public List<UnityEditor.MonoScript> scriptAssetList;
+    public Rect positionInGraph;
 #endif
 
     public List<System.Object> CreateBehaviourInstance()

@@ -1,22 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
-public class Manipulator : MonoBehaviour
+public class Manipulator
 {
     private Rect initialRect;
     private Rect currentRect;
     private Matrix4x4 _prevGuiMatrix;
-
+    private StateMachineWindow window;
 
     private float zoomScale;
     public Vector2 position => new Vector2(currentRect.x, currentRect.y);
     public float Scale => this.zoomScale;
 
-    public void SetUp(Rect initialRect){
+    public void SetUp(Rect initialRect, StateMachineWindow window){
         this.initialRect = initialRect;
         this.currentRect = initialRect;
         this.zoomScale = 1;
+        this.window = window;
     }
 
     public Rect BeginGUI(){
@@ -35,7 +37,7 @@ public class Manipulator : MonoBehaviour
         GUI.matrix = _prevGuiMatrix;
         
         GUI.EndGroup();
-        GUI.BeginGroup(new Rect(0.0f, 21, Screen.width, Screen.height));
+        GUI.BeginGroup(new Rect(0.0f, 21, this.window.position.width, this.window.position.height));
     }
 
     public void SetRectPosition(Vector2 position){
