@@ -39,14 +39,16 @@ public class StateMachineWindow : EditorWindow
             window.wantsMouseEnterLeaveWindow = true;
             window.Show();
             window.SetUpGraph();
-
+            window.SetDataHolder(asset as StateMachineDataSO);
+            window.LoadData(true);
         }
 
 
         return false;
     }
 
-    public void SetDataHolder(StateMachineDataSO dataHolder){
+    public void SetDataHolder(StateMachineDataSO dataHolder)
+    {
         this.dataHolder = dataHolder;
     }
 
@@ -69,7 +71,7 @@ public class StateMachineWindow : EditorWindow
         // var node3 = ScriptableObject.CreateInstance<CustomNode>();
         // node3.title = "node2";
         // node3.position = new Rect(2660, 2660, 0, 0);
-        
+
 
 
         graphGUI = ScriptableObject.CreateInstance<StateMachineGraph>();
@@ -81,17 +83,28 @@ public class StateMachineWindow : EditorWindow
         this.manipulator.SetUp(windowArea, this);
         this.zoomLevel = 1;
 
-        this.AddNewNode(2500, 2500);
-        this.AddNewNode(2580, 2580);
-        this.AddNewNode(2660, 2660);
+        // this.AddNewNode(2500, 2500);
+        // this.AddNewNode(2580, 2580);
+        // this.AddNewNode(2660, 2660);
     }
 
-    public void AddNewNode(float x, float y){
+    public CustomNode AddNewNode(float x, float y, string title = "New Node")
+    {
         var position = new Vector2(x, y);
         CustomNode node = ScriptableObject.CreateInstance<CustomNode>();
-        node.title = "mile";
+        node.title = title;
         node.position = new Rect(position.x, position.y, 0, 0);
         graph.AddNode(node);
+        return node;
+    }
+    public CustomNode AddNewNode(Vector2 position, string title = "New Node")
+    {
+        return this.AddNewNode(position.x, position.y, title);
+    }
+
+    private void OnBecameVisible()
+    {
+        this.LoadData();
     }
 
     private void OnGUI()
@@ -106,8 +119,13 @@ public class StateMachineWindow : EditorWindow
             graphGUI.OnGraphGUI();
             graphGUI.EndGraphGUI();
             manipulator.EndGUI();
+
+            if (GUI.Button(new Rect(0, 21, 75, 20), "Save"))
+            {
+                this.SaveData();
+            }
+
             graphGUI.DisplayContextMenu();
-            
             this.HandleScroll();
         }
     }
@@ -132,7 +150,7 @@ public class StateMachineWindow : EditorWindow
     }
     private void HandlePan()
     {
-        
+
         if (Event.current.type == EventType.MouseDrag && Event.current.button == 2)
         {
             Debug.Log("Drag");
@@ -143,13 +161,16 @@ public class StateMachineWindow : EditorWindow
         }
     }
 
-    public void SaveData(){
+    public void SaveData()
+    {
         this.dataHolder.ResetData();
         var index = 0;
         var nodeToIndexMap = new Dictionary<CustomNode, int>();
-        foreach(var n in this.graph.nodes){
+        foreach (var n in this.graph.nodes)
+        {
             var node = n as CustomNode;
-            var state = new StateHolder(){
+            var state = new StateHolder()
+            {
                 name = node.title,
                 index = index,
                 scriptAssetList = node.ScriptAssets,
@@ -159,26 +180,56 @@ public class StateMachineWindow : EditorWindow
             nodeToIndexMap.Add(node, index);
             index++;
         }
-        foreach(var e in (this.graph as CustomGraph).FSMEdgeList){
+        foreach (var e in (this.graph as CustomGraph).FSMEdgeList)
+        {
             var edge = e as CustomEdge;
-            if(edge.EndNode == null) continue;
+            if (edge.EndNode == null) continue;
             var startIndex = nodeToIndexMap[edge.StartNode as CustomNode];
             var endIndex = nodeToIndexMap[edge.EndNode as CustomNode];
-            var stateTranistion = new StateTransition(){
+            var stateTranistion = new StateTransition()
+            {
                 startIndex = startIndex,
                 endIndex = endIndex
             };
             dataHolder.stateTransitionList.Add(stateTranistion);
         }
+        this.dataHolder.zoomLevel = this.zoomLevel;
+        this.dataHolder.camPostion = this.windowPosition;
         EditorUtility.SetDirty(this.dataHolder);
         AssetDatabase.SaveAssets();
     }
+    public void LoadData(bool adjustCamPos = false)
+    {
+        if (this.dataHolder == null) return;
+        var nodeIndexMap = new Dictionary<int, CustomNode>();
+        this.graph.nodes.Clear();
+        (this.graph as CustomGraph).FSMEdgeList.Clear();
+        Debug.Log("Loading data");
+        foreach (var state in this.dataHolder.stateList)
+        {
+            var addedNode = this.AddNewNode(state.positionInGraph.position, state.name);
+            nodeIndexMap[state.index] = addedNode;
+        }
+        foreach (var transition in this.dataHolder.stateTransitionList)
+        {
+            var startNode = nodeIndexMap[transition.startIndex];
+            var endNode = nodeIndexMap[transition.endIndex];
+            this.graph.Connect(startNode, endNode);
+        }
+        if (adjustCamPos)
+        {
+            this.zoomLevel = this.dataHolder.zoomLevel;
+            manipulator.SetZoomScale(zoomLevel);
+            this.manipulator.SetRectPosition(this.dataHolder.camPostion);
+        }
+    }
 
-    public Vector2 WindowToGroupPosition(Vector2 pos){
+    public Vector2 WindowToGroupPosition(Vector2 pos)
+    {
         pos -= this.windowPosition;
         pos /= zoomLevel;
         Debug.Log(this.windowPosition);
-        return pos; 
+        return pos;
     }
     // private void Update() {
     //     this.graphGUI.OnUpdate();
