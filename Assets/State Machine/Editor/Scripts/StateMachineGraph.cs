@@ -91,13 +91,31 @@ public class StateMachineGraph : GraphGUI
                 node.title, Styles.GetNodeStyle(node.style, color, on)
             );
         }
-        (this.edgeGUI as CustomEdgeGUI).RenderEdges();
+        (this.edgeGUI as CustomEdgeGUI).RenderEdges(out var clickedOnEdge);
         //this.edgeGUI.DoDraggedEdge();
         this.m_Host.EndWindows();
         this.DragSelection();
         this.HandleMenuEvents();
 
-        if (!clickOnNode) this.HandleMakeTransition();
+        if (!clickOnNode && !clickedOnEdge) this.HandleMakeTransition();
+    }
+
+    private new void HandleMenuEvents(){
+        var customGraph = this.graph as CustomGraph;
+        if(Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Delete){
+            foreach(var node in this.selection){
+                var edgesToRemove = new List<CustomEdge>();
+                foreach(var edge in customGraph.FSMEdgeList){
+                    if(edge.StartNode == node || edge.EndNode == node) edgesToRemove.Add(edge);
+                }
+                edgesToRemove.ForEach(x => customGraph.RemoveEdge(x));
+                this.graph.DestroyNode(node);
+            }
+            foreach(var edge in (this.edgeGUI as CustomEdgeGUI).SelectedEdges){
+                (this.graph as CustomGraph).RemoveEdge(edge);
+            }
+            Event.current.Use();
+        }
     }
 
     public void DisplayContextMenu()
@@ -160,7 +178,7 @@ public class StateMachineGraph : GraphGUI
                     this.transitionMaker.StartMakingTransition();
                     this.m_Host.SendEvent(EditorGUIUtility.CommandEvent(eventText));
 
-                    var tempEdge = new CustomEdge();
+                    var tempEdge = CreateInstance<CustomEdge>();
                     tempEdge.SetStartNode(selectedNode);
                     (this.graph as CustomGraph).AddEdge(tempEdge);
                 }

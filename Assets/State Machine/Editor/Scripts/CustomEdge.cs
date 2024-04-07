@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEditor.Graphs;
 using UnityEngine;
 
-public class CustomEdge
+public class CustomEdge: ScriptableObject
 {
     private Node startNode, endNode;
 
     public Node StartNode => this.startNode;
     public Node EndNode => this.endNode;
+
+    public Vector2 startPos, endPos;
 
     public CustomEdge(Node startNode, Node endNode){
         this.startNode = startNode;

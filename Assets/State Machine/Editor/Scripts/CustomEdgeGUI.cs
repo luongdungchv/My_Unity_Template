@@ -6,14 +6,20 @@ using UnityEditor;
 using Sirenix.OdinInspector.Editor;
 using System.Reflection;
 using System;
+using System.Linq;
 
 public class CustomEdgeGUI : EdgeGUI
 {
     private HashSet<(Node, Node)> mapper = new HashSet<(Node, Node)>();
     private float arrowSize = 5f;
-    public void RenderEdges()
+    private List<CustomEdge> selectedEdgeList = new List<CustomEdge>();
+
+    public List<CustomEdge> SelectedEdges => this.selectedEdgeList;
+
+    public void RenderEdges(out bool clickedOnEdge)
     {
         var edgeList = ((this.host as StateMachineGraph).graph as CustomGraph).FSMEdgeList;
+        clickedOnEdge = false;
         foreach (var edge in edgeList)
         {
             var start = edge.StartNode.position.center;
@@ -22,14 +28,22 @@ public class CustomEdgeGUI : EdgeGUI
                 var endPosition = Event.current.mousePosition;
 
                 Handles.DrawLine(start, endPosition);
+                edge.startPos = start;
+                edge.endPos = endPosition;
                 this.RenderArrow(start, endPosition);
                 continue;
             }
             var end = edge.EndNode.position.center;
             if (mapper.Contains((edge.StartNode, edge.EndNode)))
             {
+                edge.startPos = start;
+                edge.endPos = end;
                 Handles.DrawLine(start, end);
                 this.RenderArrow(start, end);
+                if (Event.current.type == EventType.MouseDown)
+                {
+                    clickedOnEdge = this.SelectEdge(edge);
+                }
                 continue;
             };
             if (mapper.Contains((edge.EndNode, edge.StartNode)))
@@ -44,10 +58,64 @@ public class CustomEdgeGUI : EdgeGUI
                 mapper.Add((edge.StartNode, edge.EndNode));
             }
             this.RenderArrow(start, end);
+            edge.startPos = start;
+            edge.endPos = end;
             Handles.DrawLine(start, end);
+            if (Event.current.type == EventType.MouseDown)
+            {
+                clickedOnEdge = this.SelectEdge(edge);
+            }
         }
         if (Event.current.type == EventType.MouseMove)
             Event.current.Use();
+    }
+    public bool SelectEdge(CustomEdge edge)
+    {
+        Debug.Log(edge);
+        var edgeList = ((this.host as StateMachineGraph).graph as CustomGraph).FSMEdgeList;
+        var mousePos = (Event.current.mousePosition);
+        selectedEdgeList.Clear();
+
+        var start = edge.startPos;
+        var end = edge.endPos;
+        var center = (end + start) / 2;
+        var dir = (end - start).normalized;
+        var edgeLength = (end - start).magnitude / 2;
+        var normal = new Vector2(-dir.y, dir.x);
+        var dirToMouse = (mousePos - center);
+
+        var vertAngle = Vector3.Angle(dirToMouse, dir);
+        dir = vertAngle > 90 ? -dir : dir;
+        vertAngle = vertAngle > 90 ? 180 - vertAngle : vertAngle;
+        var horiAngle = Vector3.Angle(dirToMouse, normal);
+        normal = horiAngle > 90 ? -normal : normal;
+        horiAngle = horiAngle > 90 ? 180 - horiAngle : horiAngle;
+
+        var lengthY = dirToMouse.magnitude * Mathf.Cos(vertAngle * Mathf.Deg2Rad);
+        var lengthX = dirToMouse.magnitude * Mathf.Cos(horiAngle * Mathf.Deg2Rad);
+
+
+
+        var condition = lengthY < edgeLength && lengthX < 8;
+        if (condition)
+        {
+            this.selectedEdgeList.Clear();
+            this.selectedEdgeList.Add(edge);
+            this.UpdateUnitySelection();
+            Event.current.Use();
+        }
+        Debug.Log((lengthX, lengthY, mousePos, center, condition));
+        return condition;
+    }
+
+    private void UpdateUnitySelection()
+    {
+        var list = this.selectedEdgeList;
+        //Selection.objects = list.ToArray();
+        Selection.activeObject = selectedEdgeList[0];
+        Debug.Log(Selection.activeObject);
+        GUIUtility.keyboardControl = 0;
+        //EditorGUI.EndEditingActiveTextField();
     }
     private void RenderArrow(Vector2 start, Vector2 end)
     {

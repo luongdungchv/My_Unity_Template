@@ -8,7 +8,9 @@ public class CustomGraph : Graph
     private List<CustomEdge> fsmEdgeList = new List<CustomEdge>();
     public List<CustomEdge> FSMEdgeList => fsmEdgeList;
     public void Connect(Node startNode, Node endNode){
-        var edge = new CustomEdge(startNode, endNode);
+        var edge = CreateInstance<CustomEdge>();
+        edge.SetStartNode(startNode);
+        edge.SetEndNode(endNode);   
         this.fsmEdgeList.Add(edge);
     } 
     public void AddEdge(CustomEdge edge){
@@ -18,4 +20,9 @@ public class CustomGraph : Graph
         if(this.fsmEdgeList.Count == 0) return;
         this.fsmEdgeList.RemoveAt(this.fsmEdgeList.Count - 1);
     }
+    public void RemoveEdge(CustomEdge edge){
+        this.fsmEdgeList.Remove(edge);
+        DestroyImmediate(edge);
+    }
+
 }
