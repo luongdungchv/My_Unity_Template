@@ -6,10 +6,10 @@
     "description": "Simplifies 3D meshes with ease. Works both in the editor and during runtime in builds.",
     "type": "library",
     "keywords": [
-      "utilities"
+        "utilities"
     ],
     "author": {
-      "name": "Dung Luong",
-      "url": "hhttps://github.com/luongdungchv/My_Unity_Template.git"
+        "name": "Dung Luong",
+        "url": "hhttps://github.com/luongdungchv/My_Unity_Template.git"
     }
-  }
+}
