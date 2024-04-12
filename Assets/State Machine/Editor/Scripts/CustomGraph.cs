@@ -3,26 +3,33 @@ using System.Collections.Generic;
 using UnityEditor.Graphs;
 using UnityEngine;
 
-public class CustomGraph : Graph
+namespace DL.StateMachine
 {
-    private List<CustomEdge> fsmEdgeList = new List<CustomEdge>();
-    public List<CustomEdge> FSMEdgeList => fsmEdgeList;
-    public void Connect(Node startNode, Node endNode){
-        var edge = CreateInstance<CustomEdge>();
-        edge.SetStartNode(startNode);
-        edge.SetEndNode(endNode);   
-        this.fsmEdgeList.Add(edge);
-    } 
-    public void AddEdge(CustomEdge edge){
-        this.fsmEdgeList.Add(edge);
-    }
-    public void RemoveLastEdge(){
-        if(this.fsmEdgeList.Count == 0) return;
-        this.fsmEdgeList.RemoveAt(this.fsmEdgeList.Count - 1);
-    }
-    public void RemoveEdge(CustomEdge edge){
-        this.fsmEdgeList.Remove(edge);
-        DestroyImmediate(edge);
-    }
+    public class CustomGraph : Graph
+    {
+        private List<CustomEdge> fsmEdgeList = new List<CustomEdge>();
+        public List<CustomEdge> FSMEdgeList => fsmEdgeList;
+        public void Connect(Node startNode, Node endNode)
+        {
+            var edge = CreateInstance<CustomEdge>();
+            edge.SetStartNode(startNode);
+            edge.SetEndNode(endNode);
+            this.fsmEdgeList.Add(edge);
+        }
+        public void AddEdge(CustomEdge edge)
+        {
+            this.fsmEdgeList.Add(edge);
+        }
+        public void RemoveLastEdge()
+        {
+            if (this.fsmEdgeList.Count == 0) return;
+            this.fsmEdgeList.RemoveAt(this.fsmEdgeList.Count - 1);
+        }
+        public void RemoveEdge(CustomEdge edge)
+        {
+            this.fsmEdgeList.Remove(edge);
+            DestroyImmediate(edge);
+        }
 
+    }
 }

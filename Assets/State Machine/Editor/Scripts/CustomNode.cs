@@ -4,12 +4,19 @@ using UnityEngine;
 using UnityEditor.Graphs;
 using UnityEditor;
 
-public class CustomNode : Node
+namespace DL.StateMachine
 {
-    [SerializeField] private List<MonoScript> scriptAssetList;
-    [SerializeField] private string nodeTitle;
+    public class CustomNode : Node
+    {
+        [SerializeField] private List<MonoScript> scriptAssetList;
+        [SerializeField] private string nodeTitle;
 
-    public List<MonoScript> ScriptAssets => this.scriptAssetList; 
+        public List<MonoScript> ScriptAssets => this.scriptAssetList;
+        public void SetScriptAssets(List<MonoScript> monoScripts)
+        {
+            this.scriptAssetList = monoScripts;
+        }
 
-    public override string title { get => nodeTitle; set => nodeTitle = value; }
+        public override string title { get => nodeTitle; set => nodeTitle = value; }
+    }
 }

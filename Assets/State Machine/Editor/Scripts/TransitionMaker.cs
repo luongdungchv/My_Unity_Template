@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Graphs;
 
-public class TransitionMaker
+namespace DL.StateMachine
+{public class TransitionMaker
 {
     public static bool IsMakingTransition;
     private Node startNode;
@@ -29,4 +30,5 @@ public class TransitionMaker
     public void OnGUI(){
         
     }
+}
 }

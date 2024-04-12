@@ -15,25 +15,27 @@ MonoBehaviour:
   stateList:
   - name: Idle
     index: 0
-    scriptAssetList: []
+    scriptAssetList:
+    - {fileID: 11500000, guid: 697482be4ba57dc4f9d5353389c774ec, type: 3}
     positionInGraph:
       serializedVersion: 2
-      x: 2830
-      y: 2970
+      x: 2900
+      y: 2980
       width: 200
       height: 69
   - name: Test
     index: 1
-    scriptAssetList: []
+    scriptAssetList:
+    - {fileID: 11500000, guid: 9e6512e5e0e49684e9ec2dbfcbf688d5, type: 3}
     positionInGraph:
       serializedVersion: 2
-      x: 2830
-      y: 2730
+      x: 2860
+      y: 2740
       width: 200
       height: 69
   stateTransitionList:
-  - startIndex: 1
-    endIndex: 0
-  camPostion: {x: -812.1249, y: -785.1787}
-  zoomLevel: 0.375
+  - startIndex: 0
+    endIndex: 1
+  camPostion: {x: -2594.7996, y: -2483.2864}
+  zoomLevel: 1
   entryStateIndex: 0

@@ -6,7 +6,8 @@ using UnityEditor;
 using UnityEngine.Profiling;
 using System.Reflection;
 
-public class StateMachineGraph : GraphGUI
+namespace DL.StateMachine
+{public class StateMachineGraph : GraphGUI
 {
     private TransitionMaker transitionMaker = new TransitionMaker();
     public override IEdgeGUI edgeGUI
@@ -97,6 +98,12 @@ public class StateMachineGraph : GraphGUI
         this.DragSelection();
         this.HandleMenuEvents();
 
+        if(clickOnNode){
+            (this.edgeGUI as CustomEdgeGUI).SelectedEdges.Clear();
+        }
+        else if(clickedOnEdge){
+            this.selection.Clear();
+        }
         if (!clickOnNode && !clickedOnEdge) this.HandleMakeTransition();
     }
 
@@ -213,4 +220,5 @@ public class StateMachineGraph : GraphGUI
         public GUIContent[] items;
         public Vector2 mousePosition;
     }
+}
 }

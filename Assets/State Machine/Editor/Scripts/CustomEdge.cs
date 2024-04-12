@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEditor.Graphs;
 using UnityEngine;
 
-public class CustomEdge: ScriptableObject
+namespace DL.StateMachine
+{public class CustomEdge: ScriptableObject
 {
     private Node startNode, endNode;
 
@@ -27,4 +28,5 @@ public class CustomEdge: ScriptableObject
     public void SetEndNode(Node endNode){
         this.endNode = endNode;
     }
+}
 }

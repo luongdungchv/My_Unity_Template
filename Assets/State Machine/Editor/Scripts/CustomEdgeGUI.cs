@@ -8,7 +8,8 @@ using System.Reflection;
 using System;
 using System.Linq;
 
-public class CustomEdgeGUI : EdgeGUI
+namespace DL.StateMachine
+{public class CustomEdgeGUI : EdgeGUI
 {
     private HashSet<(Node, Node)> mapper = new HashSet<(Node, Node)>();
     private float arrowSize = 5f;
@@ -147,4 +148,5 @@ public class CustomEdgeGUI : EdgeGUI
         }
     }
 
+}
 }

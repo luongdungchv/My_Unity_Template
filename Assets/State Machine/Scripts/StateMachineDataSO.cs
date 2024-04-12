@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New State Data", menuName = "State Data")]
+namespace DL.StateMachine
+{[CreateAssetMenu(fileName = "New State Data", menuName = "State Data")]
 public class StateMachineDataSO : ScriptableObject
 {
     public List<StateHolder> stateList;
@@ -61,4 +62,4 @@ public class StateHolder
 public class StateTransition
 {
     public int startIndex, endIndex;
-}
+}}
