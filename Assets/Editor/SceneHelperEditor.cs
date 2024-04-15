@@ -70,4 +70,9 @@ public class SceneHelperEditor : OdinEditorWindow
         SceneAssetListChange();
         AssetDatabase.Refresh();
     }
+    [Button]
+    private void Test(){
+        Debug.Log(Selection.activeObject.name);
+        
+    }
 }
