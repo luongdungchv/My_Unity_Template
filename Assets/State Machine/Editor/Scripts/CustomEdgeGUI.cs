@@ -8,7 +8,7 @@ using System.Reflection;
 using System;
 using System.Linq;
 
-namespace DL.StateMachine
+namespace DL.StateMachine.Editor
 {public class CustomEdgeGUI : EdgeGUI
 {
 

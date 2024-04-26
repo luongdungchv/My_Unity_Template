@@ -10,7 +10,7 @@ using System.CodeDom;
 using System;
 using System.Reflection;
 
-namespace DL.StateMachine
+namespace DL.StateMachine.Editor
 {
     public class StateMachineWindow : EditorWindow
     {
