@@ -33,6 +33,7 @@ namespace DL.StateMachine.Editor
             _prevGuiMatrix = GUI.matrix;
             Matrix4x4 translation = Matrix4x4.TRS(currentRect.position, Quaternion.identity, Vector3.one);
             Matrix4x4 scale = Matrix4x4.Scale(new Vector3(zoomScale, zoomScale, 1.0f));
+            Debug.Log(zoomScale);
             GUI.matrix = translation * scale * translation.inverse * GUI.matrix;
 
             return currentRect;
@@ -49,6 +50,7 @@ namespace DL.StateMachine.Editor
         {
             currentRect.x = position.x;
             currentRect.y = position.y;
+            Debug.Log(position);
         }
         public void SetZoomScale(float zoomScale)
         {

@@ -17,7 +17,7 @@ namespace DL.StateMachine.Editor
             this.fsmEdgeList.Add(edge);
         }
         public void AddEdge(CustomEdge edge)
-        {
+        { 
             this.fsmEdgeList.Add(edge);
         }
         public void RemoveLastEdge()

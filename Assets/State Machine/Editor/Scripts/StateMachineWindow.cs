@@ -48,6 +48,13 @@ namespace DL.StateMachine.Editor
 
             return false;
         }
+        
+        private void OnEnable(){
+            if(this.dataHolder){
+                this.SetUpGraph();
+                this.LoadData(false);
+            }
+        }
 
         public void SetDataHolder(StateMachineDataSO dataHolder)
         {
@@ -59,35 +66,13 @@ namespace DL.StateMachine.Editor
             graph = ScriptableObject.CreateInstance<CustomGraph>();
             graph.hideFlags = HideFlags.HideAndDontSave;
 
-            // CustomNode node = ScriptableObject.CreateInstance<CustomNode>();
-            // node.title = "mile";
-            // node.position = new Rect(2500, 2500, 0, 0);
-
-            // var node2 = ScriptableObject.CreateInstance<CustomNode>();
-            // node2.title = "node2";
-            // node2.position = new Rect(2580, 2580, 0, 0);
-
-            // graph.AddNode(node);
-            // graph.AddNode(node2);
-
-            // var node3 = ScriptableObject.CreateInstance<CustomNode>();
-            // node3.title = "node2";
-            // node3.position = new Rect(2660, 2660, 0, 0);
-
-
-
             graphGUI = ScriptableObject.CreateInstance<StateMachineGraph>();
             graphGUI.graph = graph;
 
             this.windowArea = new Rect(-2500, -2500, 5000, 5000);
-            Debug.Log(windowArea);
             this.manipulator = new Manipulator();
             this.manipulator.SetUp(windowArea, this);
             this.zoomLevel = 1;
-
-            // this.AddNewNode(2500, 2500);
-            // this.AddNewNode(2580, 2580);
-            // this.AddNewNode(2660, 2660);
         }
 
         public CustomNode AddNewNode(float x, float y, string title = "New Node")

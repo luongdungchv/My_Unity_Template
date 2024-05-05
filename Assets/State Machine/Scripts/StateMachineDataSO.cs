@@ -9,8 +9,8 @@ public class StateMachineDataSO : ScriptableObject
 {
     public List<StateHolder> stateList;
     public List<StateTransition> stateTransitionList;
-    public Vector2 camPostion;
-    public float zoomLevel;
+    public Vector2 camPostion = new Vector2(-2500, -2500);
+    public float zoomLevel = 1;
     public int entryStateIndex;
 
     public void ResetData(){
