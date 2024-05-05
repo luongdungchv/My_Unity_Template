@@ -36,6 +36,6 @@ MonoBehaviour:
   stateTransitionList:
   - startIndex: 0
     endIndex: 1
-  camPostion: {x: -2594.7996, y: -2483.2864}
-  zoomLevel: 1
+  camPostion: {x: -1817.2861, y: -1837.4653}
+  zoomLevel: 0.75
   entryStateIndex: 0

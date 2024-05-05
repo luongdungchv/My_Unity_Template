@@ -15,5 +15,5 @@ MonoBehaviour:
   stateList: []
   stateTransitionList: []
   camPostion: {x: -2500, y: -2500}
-  zoomLevel: 0
+  zoomLevel: 1
   entryStateIndex: 0

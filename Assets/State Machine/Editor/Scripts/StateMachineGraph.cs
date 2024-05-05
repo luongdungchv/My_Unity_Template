@@ -76,11 +76,14 @@ namespace DL.StateMachine.Editor
         this.m_Host.BeginWindows();
         bool clickOnNode = false;
         //this.DisplayContextMenu();
+        int id = 0;
         foreach (var node in this.m_Graph.nodes)
         {
             Node n2 = node;
             bool on = this.selection.Contains(node);
-            Styles.Color color = node.nodeIsInvalid ? Styles.Color.Red : node.color;
+            var entryIndex = (this.m_Host as StateMachineWindow).EntryIndex;
+        
+            Styles.Color color = entryIndex == id ? Styles.Color.Orange : node.color;
             node.position = GUILayout.Window(
                 node.GetInstanceID(),
                 node.position,
@@ -91,6 +94,7 @@ namespace DL.StateMachine.Editor
                 },
                 node.title, Styles.GetNodeStyle(node.style, color, on)
             );
+            id++;
         }
         (this.edgeGUI as CustomEdgeGUI).RenderEdges(out var clickedOnEdge);
         //this.edgeGUI.DoDraggedEdge();
@@ -138,6 +142,7 @@ namespace DL.StateMachine.Editor
             if (flag2)
             {
                 list.Add(EditorGUIUtility.TrTextContent("Make Transition", null));
+                list.Add(EditorGUIUtility.TrTextContent("Set as entry", null));
                 list.Add(EditorGUIUtility.TrTextContent("Cut", null));
                 list.Add(EditorGUIUtility.TrTextContent("Copy", null));
                 list.Add(EditorGUIUtility.TrTextContent("Duplicate"));
@@ -194,6 +199,11 @@ namespace DL.StateMachine.Editor
                     Debug.Log(mousePos);
                     //mousePos = Vector2.one * 3000;
                     (this.m_Host as StateMachineWindow).AddNewNode(mousePos.x, mousePos.y); 
+                }
+                else if (eventText == "Set as entry"){
+                    var selectedNode = this.selection[0];
+                    var index = this.graph.nodes.IndexOf(selectedNode);
+                    (this.m_Host as StateMachineWindow).SetEntryIndex(index); 
                 }
 
                 else

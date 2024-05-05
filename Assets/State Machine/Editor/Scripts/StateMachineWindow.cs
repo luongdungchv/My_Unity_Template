@@ -29,6 +29,7 @@ namespace DL.StateMachine.Editor
 
         private float zoomLevel = 1;
         public Vector2 windowPosition => this.manipulator.position;
+        public int EntryIndex => this.dataHolder.entryStateIndex;
 
         [OnOpenAsset(0)]
         public static bool ShowWindow(int instanceID, int line)
@@ -184,6 +185,10 @@ namespace DL.StateMachine.Editor
             this.dataHolder.camPostion = this.windowPosition;
             EditorUtility.SetDirty(this.dataHolder);
             AssetDatabase.SaveAssets();
+        }
+        
+        public void SetEntryIndex(int index){
+            this.dataHolder.entryStateIndex = index;
         }
         public void LoadData(bool adjustCamPos = false)
         {
