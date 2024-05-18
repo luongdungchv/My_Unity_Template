@@ -13,7 +13,7 @@ namespace DL.StateMachine.Editor
 {
 
     private HashSet<(Node, Node)> mapper = new HashSet<(Node, Node)>();
-    private float arrowSize = 5f;
+    private float arrowSize = 5f; 
     private List<CustomEdge> selectedEdgeList = new List<CustomEdge>();
 
     public List<CustomEdge> SelectedEdges => this.selectedEdgeList;
