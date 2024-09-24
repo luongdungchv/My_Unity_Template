@@ -27,6 +27,9 @@ namespace DL.StateMachine
         {
             this.fsm.OnStateFixedUpdate();
         }
+        private void LateUpdate() {
+            this.fsm.OnStateLateUpdate();
+        }
         [Sirenix.OdinInspector.Button]
         public void ChangeState(string state)
         {
@@ -80,6 +83,7 @@ namespace DL.StateMachine
                 UnityAction<StateController> onExitCallback = (c) => { };
                 UnityAction<StateController> onUpdateCallback = (c) => { };
                 UnityAction<StateController> onFixedUpdateCallback = (c) => { };
+                UnityAction<StateController> onLateUpdateCallback = (c) => { };
                 foreach (var behaviour in behaviourList)
                 {
                     var stateBehaviour = (StateBehaviour)behaviour;
@@ -87,9 +91,10 @@ namespace DL.StateMachine
                     onExitCallback += stateBehaviour.OnStateExit;
                     onUpdateCallback += stateBehaviour.OnStateUpdate;
                     onFixedUpdateCallback += stateBehaviour.OnStateFixedUpdate;
+                    onLateUpdateCallback += stateBehaviour.OnStateLateUpdate;
                 }
 
-                state.SetCallback(onEnterCallback, onExitCallback, onUpdateCallback, onFixedUpdateCallback);
+                state.SetCallback(onEnterCallback, onExitCallback, onUpdateCallback, onFixedUpdateCallback, onLateUpdateCallback);
                 stateMap.Add(state.Name, state);
             }
             foreach (var transition in data.stateTransitionList)
@@ -121,6 +126,10 @@ namespace DL.StateMachine
         {
             this.CurrentState.OnStateFixedUpdate(controller);
         }
+        public void OnStateLateUpdate()
+        {
+            this.CurrentState.OnStateLateUpdate(controller);
+        }
     }
     [System.Serializable]
     public class State
@@ -128,7 +137,7 @@ namespace DL.StateMachine
         [SerializeField] private string name;
         public string Name => this.name;
 
-        private UnityAction<StateController> OnEnter, OnExit, OnUpdate, OnFixedUpdate;
+        private UnityAction<StateController> OnEnter, OnExit, OnUpdate, OnFixedUpdate, OnLateUpdate;
 
         private List<State> transitionList;
 
@@ -156,13 +165,15 @@ namespace DL.StateMachine
             UnityAction<StateController> OnEnter,
             UnityAction<StateController> OnExit,
             UnityAction<StateController> OnUpdate,
-            UnityAction<StateController> OnFixedUpdate
+            UnityAction<StateController> OnFixedUpdate,
+            UnityAction<StateController> OnLateUpdate
         )
         {
             this.OnEnter = OnEnter;
             this.OnExit = OnExit;
             this.OnUpdate = OnUpdate;
             this.OnFixedUpdate = OnFixedUpdate;
+            this.OnLateUpdate = OnLateUpdate;
         }
 
         public void OnStateEnter(StateController controller)
@@ -183,6 +194,9 @@ namespace DL.StateMachine
         public void OnStateFixedUpdate(StateController controller)
         {
             this.OnFixedUpdate.Invoke(controller);
+        }
+        public void OnStateLateUpdate(StateController controller){
+            this.OnLateUpdate.Invoke(controller);
         }
     }
 }

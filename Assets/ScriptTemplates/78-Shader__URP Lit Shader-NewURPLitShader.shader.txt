@@ -65,7 +65,7 @@ Shader "Custom/URP Lit"
                 surfData.smoothness = _Glossiness;
                 surfData.metallic = _Metallic;
                 surfData.alpha = baseMap.a;
-                surfData.occulusion = 1;
+                surfData.occlusion = 1;
                 return surfData;
             }
 
